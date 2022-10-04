@@ -51,13 +51,13 @@ public class GameManager : MonoBehaviour
         data.highscore = Highscore;
 
         string json = JsonUtility.ToJson(data);
-        File.WriteAllText(Application.persistentDataPath + "/savefile", json);
+        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
     }
     public void LoadGameData()
     {
-        if (File.Exists(Application.persistentDataPath + "/savefile"))
+        if (File.Exists(Application.persistentDataPath + "/savefile.json"))
         {
-            string json = File.ReadAllText(Application.persistentDataPath + "/savefile");
+            string json = File.ReadAllText(Application.persistentDataPath + "/savefile.json");
             SaveData data = JsonUtility.FromJson<SaveData>(json);
 
             BestPlayer = data.bestPlayer;
