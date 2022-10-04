@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -8,7 +9,6 @@ public class GameManager : MonoBehaviour
 
     public string CurrentPlayerName;
     public string BestPlayer;
-    public string LastPlayer;
     public int Highscore;
     private void Awake()
     {
@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        LoadGameData();
     }
 
     public void NewHighscore(int score)
@@ -30,5 +32,37 @@ public class GameManager : MonoBehaviour
     public void SetCurrentPlayer(string playerName)
     {
         CurrentPlayerName = playerName;
+    }
+
+    [System.Serializable]
+    class SaveData
+    {
+        public string bestPlayer;
+        public string lastPlayer;
+        public int highscore;
+    }
+
+    public void SaveGame()
+    {
+        SaveData data = new SaveData();
+
+        data.bestPlayer = BestPlayer;
+        data.lastPlayer = CurrentPlayerName;
+        data.highscore = Highscore;
+
+        string json = JsonUtility.ToJson(data);
+        File.WriteAllText(Application.persistentDataPath + "/savefile", json);
+    }
+    public void LoadGameData()
+    {
+        if (File.Exists(Application.persistentDataPath + "/savefile"))
+        {
+            string json = File.ReadAllText(Application.persistentDataPath + "/savefile");
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+            BestPlayer = data.bestPlayer;
+            CurrentPlayerName = data.lastPlayer;
+            Highscore = data.highscore;
+        }
     }
 }

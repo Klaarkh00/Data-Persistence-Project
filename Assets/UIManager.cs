@@ -39,10 +39,11 @@ public class UIManager : MonoBehaviour
 
     public void ExitGame()
     {
+        GameManager.Instance.SaveGame();
 #if UNITY_EDITOR
         EditorApplication.ExitPlaymode();
 #else
         Application.Quit();
-#endif
+#endif  
     }
 }
